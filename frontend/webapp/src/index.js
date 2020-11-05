@@ -1,13 +1,21 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './components/App';
-import reportWebVitals from './reportWebVitals';
+import React from "react";
+import ReactDOM from "react-dom";
+import App from "./components/App";
+import reportWebVitals from "./reportWebVitals";
+import { BrowserRouter as Router } from "react-router-dom";
+import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+
+const theme = createMuiTheme();
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
+  <ThemeProvider theme={theme}>
+    <Router>
+      <React.StrictMode>
+        <App />
+      </React.StrictMode>
+    </Router>
+  </ThemeProvider>,
+  document.getElementById("root")
 );
 
 // If you want to start measuring performance in your app, pass a function

@@ -4,6 +4,9 @@ const HomePage = () => {
   return (
     <div>
       <h1>HomePage</h1>
+      <div>
+        <button>Sign in with Google</button>
+      </div>
       <p>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec
         odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla
