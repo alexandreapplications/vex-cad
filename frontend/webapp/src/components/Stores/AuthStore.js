@@ -1,0 +1,57 @@
+import { EventEmitter } from "events";
+import Dispatcher from "../../appDispatcher";
+import { auth } from "../../firebase";
+
+const CHANGE_EVENT = "Change";
+
+let initialized = false;
+
+class AuthStore extends EventEmitter {
+  getUser() {
+    return auth.currentUser;
+  }
+
+  isAutenticated() {
+    return auth.isAutenticated;
+  }
+
+  isInitialized() {
+    return initialized;
+  }
+
+  loginByForm(email, password) {
+    return auth.signInWithEmailAndPassword(email, password);
+  }
+
+  signOut() {
+    return auth.signOut();
+  }
+
+  addChangeListener(callback) {
+    this.on(CHANGE_EVENT, callback);
+  }
+
+  removeChangeListener(callback) {
+    this.removeListener(CHANGE_EVENT, callback);
+  }
+
+  emitChange() {
+    this.emit(CHANGE_EVENT);
+  }
+}
+
+const store = new AuthStore();
+
+Dispatcher.register((action) => {
+  switch (action.actionType) {
+    default:
+    // nothing to do
+  }
+});
+
+auth.onAuthStateChanged((user) => {
+  initialized = true;
+  store.emitChange();
+});
+
+export default store;

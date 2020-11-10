@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import clsx from "clsx";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
@@ -22,6 +22,7 @@ import Hidden from "@material-ui/core/Hidden";
 import { Button } from "@material-ui/core";
 import { Link as RouterLink } from "react-router-dom";
 import UserComponent from "./UserComponent";
+import authStore from "../Stores/AuthStore";
 
 const drawerWidth = 240;
 
@@ -90,7 +91,20 @@ const useStyles = makeStyles((theme) => ({
 const PageInfra = ({ children, ...initOptions }) => {
   const classes = useStyles();
   const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  const [user, setUser] = useState(authStore.getUser());
+
+  useEffect(() => {
+    function onAuthChange() {
+      setUser(authStore.getUser());
+    }
+
+    authStore.addChangeListener(onAuthChange);
+
+    return () => {
+      authStore.removeChangeListener(onAuthChange);
+    };
+  });
 
   function handleDrawerOpen() {
     setOpen(true);
@@ -128,13 +142,29 @@ const PageInfra = ({ children, ...initOptions }) => {
             <Button color="inherit" component={RouterLink} to="/">
               Home
             </Button>
-            <Button color="inherit" component={RouterLink} to="/signin">
-              Sign in
+            {user ? (
+              <Button
+                color="inherit"
+                onClick={() => {
+                  authStore.signOut().then(() => {
+                    alert("Logoff");
+                  });
+                }}
+              >
+                Sign out
+              </Button>
+            ) : (
+              <Button color="inherit" component={RouterLink} to="/signin">
+                Sign in
+              </Button>
+            )}
+            <Button color="inherit" component={RouterLink} to="/clients">
+              Clients
             </Button>
             <Button color="inherit" component={RouterLink} to="/about">
               About
             </Button>
-            <UserComponent></UserComponent>
+            <UserComponent user={authStore.getUser()}></UserComponent>
           </Hidden>
         </Toolbar>
       </AppBar>
