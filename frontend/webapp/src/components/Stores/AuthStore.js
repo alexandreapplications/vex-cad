@@ -12,7 +12,7 @@ class AuthStore extends EventEmitter {
   }
 
   isAutenticated() {
-    return auth.isAutenticated;
+    return auth.currentUser != null;
   }
 
   isInitialized() {
@@ -49,7 +49,7 @@ Dispatcher.register((action) => {
   }
 });
 
-auth.onAuthStateChanged((user) => {
+auth.onAuthStateChanged(() => {
   initialized = true;
   store.emitChange();
 });

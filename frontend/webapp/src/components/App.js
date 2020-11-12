@@ -10,6 +10,7 @@ import authStore from "./Stores/AuthStore";
 import ManageClientPage from "./Internal/Clients/ManageClientPage";
 import ClientsPage from "./Internal/Clients/ClientsPage";
 import messageStore from "./Stores/MessageStore";
+import LandingPage from "./Internal/LandingPage";
 
 const App = (...props) => {
   const [user, setUser] = useState(authStore.getUser());
@@ -41,6 +42,7 @@ const App = (...props) => {
       <Redirect
         to={{
           pathname: "/signin",
+          state: { from: rest.path },
         }}
       />
     );
@@ -51,14 +53,13 @@ const App = (...props) => {
         <PageInfra user={user}>
           <Switch>
             <Route exact path="/" component={HomePage} />
-            <Route path="/client/:id" component={ManageClientPage} />
-            <Route path="/client" component={ManageClientPage} />
-            <Route path="/clients/:id" component={ClientsPage} />
-            <Route path="/clients" component={ClientsPage} />
-            <PrivateRoute exact path="/about" component={AboutPage} />
-            <Route exact path="/signin" component={SignInPage} />
-            <Route exact path="/signup" component={SignUpPage} />
-            {/* <PrivateRoute exact path="/servers" component={ServerListPage} /> */}
+            <PrivateRoute path="/client/:id" component={ManageClientPage} />
+            <PrivateRoute path="/client" component={ManageClientPage} />
+            <PrivateRoute path="/clients" component={ClientsPage} />
+            <PrivateRoute path="/dashboard" component={LandingPage} />
+            <Route exact path="/about" component={AboutPage} />
+            <Route path="/signin" component={SignInPage} />
+            <Route path="/signup" component={SignUpPage} />
             <Route component={PageNotFound} />
           </Switch>
         </PageInfra>

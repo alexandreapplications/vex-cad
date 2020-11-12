@@ -20,7 +20,7 @@ import ListIcon from "@material-ui/icons/List";
 // import BusinessIcon from "@material-ui/icons/Business";
 import Hidden from "@material-ui/core/Hidden";
 import { Button } from "@material-ui/core";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, Redirect } from "react-router-dom";
 import UserComponent from "./UserComponent";
 import authStore from "../Stores/AuthStore";
 
@@ -139,32 +139,34 @@ const PageInfra = ({ children, ...initOptions }) => {
             </Typography>
           </Hidden>
           <Hidden mdDown={true}>
-            <Button color="inherit" component={RouterLink} to="/">
-              Home
-            </Button>
             {user ? (
               <Button
                 color="inherit"
                 onClick={() => {
                   authStore.signOut().then(() => {
-                    alert("Logoff");
+                    <Redirect to={{ pathname: "/" }} />;
                   });
                 }}
               >
                 Sign out
               </Button>
             ) : (
-              <Button color="inherit" component={RouterLink} to="/signin">
-                Sign in
+              <React.Fragment>
+                <Button color="inherit" component={RouterLink} to="/">
+                  Home
+                </Button>
+                <Button color="inherit" component={RouterLink} to="/dashboard">
+                  Sign in
+                </Button>
+              </React.Fragment>
+            )}
+            {user ? (
+              <UserComponent user={authStore.getUser()}></UserComponent>
+            ) : (
+              <Button color="inherit" component={RouterLink} to="/about">
+                About
               </Button>
             )}
-            <Button color="inherit" component={RouterLink} to="/clients">
-              Clients
-            </Button>
-            <Button color="inherit" component={RouterLink} to="/about">
-              About
-            </Button>
-            <UserComponent user={authStore.getUser()}></UserComponent>
           </Hidden>
         </Toolbar>
       </AppBar>
@@ -179,7 +181,7 @@ const PageInfra = ({ children, ...initOptions }) => {
       >
         <div className={classes.drawerHeader} onClick={handleDrawerClose}>
           <Typography className={classes.drawerTitle} noWrap>
-            FCA Devops
+            VEX - Cad
           </Typography>
           <IconButton>
             {theme.direction === "ltr" ? (
@@ -197,11 +199,11 @@ const PageInfra = ({ children, ...initOptions }) => {
             </ListItemIcon>
             <ListItemText>Home</ListItemText>
           </ListItem>
-          <ListItem button key="2" component={RouterLink} to="/servers">
+          <ListItem button key="2" component={RouterLink} to="/clients">
             <ListItemIcon>
               <ListIcon />
             </ListItemIcon>
-            <ListItemText>Servidores</ListItemText>
+            <ListItemText>Clients</ListItemText>
           </ListItem>
         </List>
       </Drawer>

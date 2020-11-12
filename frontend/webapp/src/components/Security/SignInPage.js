@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -9,12 +9,13 @@ import Link from "@material-ui/core/Link";
 import Grid from "@material-ui/core/Grid";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
-import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
+import { makeStyles } from "@material-ui/core/styles";
 import { Link as RouterLink } from "react-router-dom";
 import { auth } from "../../firebase";
 import firebase from "firebase/app";
 import authStore from "../Stores/AuthStore";
+import { useHistory, useLocation } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -36,10 +37,28 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignIn() {
+export default function SignIn(...props) {
+  let location = useLocation();
+  let history = useHistory();
+  let { from } = location.state || { from: { pathname: "/" } };
+
   const [form, setForm] = useState({
     email: "",
     password: "",
+  });
+
+  useEffect(() => {
+    function onAuthChange() {
+      if (authStore.isAutenticated()) {
+        history.replace(from);
+      }
+    }
+
+    authStore.addChangeListener(onAuthChange);
+
+    return () => {
+      authStore.removeChangeListener(onAuthChange);
+    };
   });
 
   function handleChange({ target }) {
@@ -50,18 +69,12 @@ export default function SignIn() {
     event.preventDefault();
     authStore
       .loginByForm(form.email, form.password)
-      .then((value) => {
-        alert(value);
-      })
+      .then(() => {})
       .catch((reason) => {
         alert(reason);
       });
-    // if (!formIsValid()) return;
-    // courseApi.saveCourse(course).then(() => {
-    //   props.history.push("/courses");
-    //   toast.success("Course saved.");
-    // });
   }
+
   const classes = useStyles();
 
   return (
