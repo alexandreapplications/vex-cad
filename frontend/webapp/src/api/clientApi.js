@@ -20,6 +20,10 @@ export function getCliente(id) {
   });
 }
 
+export function getClienteObserver(id, callback) {
+  return db.collection("clients").doc(id).onSnapshot(callback);
+}
+
 export function saveCliente(id, data) {
   return new Promise((resolve, reject) => {
     if (!id) {
@@ -44,14 +48,22 @@ export function getClientes() {
     db.collection("clients")
       .get()
       .then((snapshot) => {
-        var newRecords = [];
-        snapshot.forEach((item) => {
-          newRecords.push({ id: item.id, data: item.data() });
-        });
-        resolve(newRecords);
+        resolve(manageRecordList(snapshot));
       })
       .catch((reason) => {
         reject(reason);
       });
   });
+}
+
+export function setClientesObserver(callback) {
+  db.collection("clients").onSnapshot(callback);
+}
+
+export function manageRecordList(snapshot) {
+  var newRecords = [];
+  snapshot.forEach((item) => {
+    newRecords.push({ id: item.id, data: item.data() });
+  });
+  return newRecords;
 }

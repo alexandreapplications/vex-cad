@@ -28,11 +28,11 @@ const ClientList = (props) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {props.rows.length > 0 || (
+            {/* {props.rows.length > 0 || (
               <TableRow key={0}>
                 <TableCell colSpan={4}>No data</TableCell>
               </TableRow>
-            )}
+            )} */}
             {props.rows.map((row) => (
               <TableRow key={row.id}>
                 <TableCell component="th" scope="row">

@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { getCliente, saveCliente } from "../../../api/clientApi";
+import {
+  getCliente,
+  saveCliente,
+  getClienteObserver,
+} from "../../../api/clientApi";
 import ClientForm from "./ClientForm";
 import { Paper, Container, makeStyles, Grid, Button } from "@material-ui/core";
 import MessageStore from "../../Stores/MessageStore";
@@ -16,12 +20,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const ManageClientPage = (props) => {
-  const [client, setClient] = useState({
-    code: "",
-    name: "",
-    phone: "",
-    alias: "",
-  });
+  const [client, setClient] = useState(null);
 
   const classes = useStyles();
 
@@ -29,8 +28,20 @@ const ManageClientPage = (props) => {
     const id = props.match.params.id; // from the path;
     if (id) {
       getCliente(id).then((_course) => setClient(_course));
+      getClienteObserver(id, handleSourceChange);
+    } else {
+      setClient({
+        code: "",
+        name: "",
+        phone: "",
+        alias: "",
+      });
     }
   }, [props.match.params.id]);
+
+  function handleSourceChange(doc) {
+    setClient(doc.data());
+  }
 
   function handleChange({ target }) {
     setClient({ ...client, [target.name]: target.value });
@@ -56,35 +67,39 @@ const ManageClientPage = (props) => {
 
   return (
     <React.Fragment>
-      <p>
-        <Button
-          onClick={() => {
-            MessageStore.addMessage(new Date().toTimeString());
-          }}
-        >
-          Adicionar Mensagem
-        </Button>
-      </p>
-      <Grid
-        container
-        className={classes.root}
-        alignItems="center"
-        direction="column"
-      >
-        <Grid item xs={12} sm={10} md={8}>
-          <Paper>
-            <Container>
-              <h1>Cliente</h1>
-              <ClientForm
-                client={client}
-                onChange={handleChange}
-                onSubmit={handleSubmit}
-                onCancel={handleCancel}
-              ></ClientForm>
-            </Container>
-          </Paper>
-        </Grid>
-      </Grid>
+      {client && (
+        <React.Fragment>
+          <p>
+            <Button
+              onClick={() => {
+                MessageStore.addMessage(new Date().toTimeString());
+              }}
+            >
+              Adicionar Mensagem
+            </Button>
+          </p>
+          <Grid
+            container
+            className={classes.root}
+            alignItems="center"
+            direction="column"
+          >
+            <Grid item xs={12} sm={10} md={8}>
+              <Paper>
+                <Container>
+                  <h1>Cliente</h1>
+                  <ClientForm
+                    client={client}
+                    onChange={handleChange}
+                    onSubmit={handleSubmit}
+                    onCancel={handleCancel}
+                  ></ClientForm>
+                </Container>
+              </Paper>
+            </Grid>
+          </Grid>
+        </React.Fragment>
+      )}
     </React.Fragment>
   );
 };
