@@ -36,7 +36,7 @@ const ClientList = (props) => {
             {props.rows.map((row) => (
               <TableRow key={row.id}>
                 <TableCell component="th" scope="row">
-                  <NavLink to={`/client/${row.id}`}>{row.data.name}</NavLink>
+                  <NavLink to={`/client/${row.id}`}>{row.data.nome}</NavLink>
                 </TableCell>
                 <TableCell align="center">{row.data.code}</TableCell>
                 <TableCell align="center">{row.data.phone}</TableCell>

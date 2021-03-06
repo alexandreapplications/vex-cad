@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ClientList from "./ClientList";
 import {
-  getClientes,
   setClientesObserver,
   manageRecordList,
 } from "../../../api/clientApi";

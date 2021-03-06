@@ -9,6 +9,8 @@ import PageNotFound from "./PageNotFound";
 import authStore from "./Stores/AuthStore";
 import ManageClientPage from "./Internal/Clients/ManageClientPage";
 import ClientsPage from "./Internal/Clients/ClientsPage";
+import DomainsPage from "./Internal/Domains/DomainsPage";
+import DomainPage from "./Internal/Domains/DomainPage";
 import messageStore from "./Stores/MessageStore";
 import LandingPage from "./Internal/LandingPage";
 
@@ -57,6 +59,9 @@ const App = (...props) => {
             <PrivateRoute path="/client" component={ManageClientPage} />
             <PrivateRoute path="/clients" component={ClientsPage} />
             <PrivateRoute path="/dashboard" component={LandingPage} />
+            <PrivateRoute path="/domains" component={DomainsPage} />
+            <PrivateRoute path="/domain/:id" component={DomainPage} />
+            <PrivateRoute path="/domain" component={DomainPage} />
             <Route exact path="/about" component={AboutPage} />
             <Route path="/signin" component={SignInPage} />
             <Route path="/signup" component={SignUpPage} />

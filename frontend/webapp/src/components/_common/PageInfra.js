@@ -1,28 +1,20 @@
 import React, { useEffect, useState } from "react";
 import clsx from "clsx";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-import Drawer from "@material-ui/core/Drawer";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import List from "@material-ui/core/List";
-import Typography from "@material-ui/core/Typography";
-import Divider from "@material-ui/core/Divider";
-import IconButton from "@material-ui/core/IconButton";
-import MenuIcon from "@material-ui/icons/Menu";
-import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import DashboardIcon from "@material-ui/icons/Dashboard";
-import ListIcon from "@material-ui/icons/List";
-// import BusinessIcon from "@material-ui/icons/Business";
+import { Drawer, CssBaseline, AppBar, Toolbar, List, Typography, Divider, IconButton, ListItem, ListItemIcon, ListItemText, Button, Menu, MenuItem } from "@material-ui/core";
 import Hidden from "@material-ui/core/Hidden";
-import { Button } from "@material-ui/core";
 import { Link as RouterLink, Redirect } from "react-router-dom";
 import UserComponent from "./UserComponent";
 import authStore from "../Stores/AuthStore";
+import MenuIcon from "@material-ui/icons/Menu";
+import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
+import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+import DashboardIcon from "@material-ui/icons/Dashboard";
+import ListIcon from "@material-ui/icons/List";
+import {
+  setListObserver as setDomainsObserver,
+  manageRecordList as manageDomainList,
+} from "../../api/domainApi";
 
 const drawerWidth = 240;
 
@@ -93,11 +85,15 @@ const PageInfra = ({ children, ...initOptions }) => {
   const theme = useTheme();
   const [open, setOpen] = useState(false);
   const [user, setUser] = useState(authStore.getUser());
+  const [domains, setDomains] = useState(null);
+  const [selectedDomain, setSelectedDomain] = useState(null);
 
   useEffect(() => {
     function onAuthChange() {
       setUser(authStore.getUser());
     }
+
+    setDomainsObserver(handleDomainChange);
 
     authStore.addChangeListener(onAuthChange);
 
@@ -106,6 +102,10 @@ const PageInfra = ({ children, ...initOptions }) => {
     };
   });
 
+  function handleDomainChange(doc) {
+    setDomains(manageDomainList(doc));
+  }
+
   function handleDrawerOpen() {
     setOpen(true);
   }
@@ -113,6 +113,17 @@ const PageInfra = ({ children, ...initOptions }) => {
   function handleDrawerClose() {
     setOpen(false);
   }
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const menuOpen = Boolean(anchorEl);
+
+  const handleMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   return (
     <div className={classes.root}>
@@ -140,33 +151,61 @@ const PageInfra = ({ children, ...initOptions }) => {
           </Hidden>
           <Hidden mdDown={true}>
             {user ? (
-              <Button
-                color="inherit"
-                onClick={() => {
-                  authStore.signOut().then(() => {
-                    <Redirect to={{ pathname: "/" }} />;
-                  });
-                }}
-              >
-                Sign out
+              <>
+                <Button aria-label="account of current user"
+                  aria-controls="menu-appbar"
+                  aria-haspopup="true"
+                  onClick={handleMenu}
+                  color="inherit">{selectedDomain ? selectedDomain.data.nome : "Selecionar Empresa"}</Button>
+                <Menu id="select-empresa"
+                  anchorEl={anchorEl}
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  keepMounted
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  open={menuOpen}
+                  onClose={handleClose}>
+                  {domains && domains.map(item => <MenuItem onClick={
+                    () => {
+                      setSelectedDomain(item)
+                      handleClose()
+                    }
+                  } key={item.id}>{item.data.nome}</MenuItem>)}
+                  <MenuItem onClick={handleClose} component={RouterLink} to="/Domains">Administrar</MenuItem>
+                </Menu>
+                <Button
+                  color="inherit"
+                  onClick={() => {
+                    authStore.signOut().then(() => {
+                      <Redirect to={{ pathname: "/" }} />;
+                    });
+                  }}
+                >
+                  Sign out
               </Button>
+              </>
             ) : (
-              <React.Fragment>
-                <Button color="inherit" component={RouterLink} to="/">
-                  Home
+                <React.Fragment>
+                  <Button color="inherit" component={RouterLink} to="/">
+                    Home
                 </Button>
-                <Button color="inherit" component={RouterLink} to="/dashboard">
-                  Sign in
+                  <Button color="inherit" component={RouterLink} to="/dashboard">
+                    Sign in
                 </Button>
-              </React.Fragment>
-            )}
+                </React.Fragment>
+              )}
             {user ? (
               <UserComponent user={authStore.getUser()}></UserComponent>
             ) : (
-              <Button color="inherit" component={RouterLink} to="/about">
-                About
-              </Button>
-            )}
+                <Button color="inherit" component={RouterLink} to="/about">
+                  About
+                </Button>
+              )}
           </Hidden>
         </Toolbar>
       </AppBar>
@@ -187,8 +226,8 @@ const PageInfra = ({ children, ...initOptions }) => {
             {theme.direction === "ltr" ? (
               <ChevronLeftIcon />
             ) : (
-              <ChevronRightIcon />
-            )}
+                <ChevronRightIcon />
+              )}
           </IconButton>
         </div>
         <Divider />
