@@ -1,10 +1,16 @@
 import { firestore as db } from "../firebase";
+import { manageRecordList } from "./commonApi"
 // Load Chance
 const Chance = require("chance");
 
-export function getCliente(id) {
+////#region Private functions
+const collectionName = "usuario"
+////#endregion
+
+////#region Public and common functions
+export function getRecord(id) {
   return new Promise((resolve, reject) => {
-    db.collection("clients")
+    db.collection(collectionName)
       .doc(id)
       .get()
       .then((doc) => {
@@ -20,18 +26,18 @@ export function getCliente(id) {
   });
 }
 
-export function getClienteObserver(id, callback) {
-  return db.collection("clients").doc(id).onSnapshot(callback);
+export function getRecordObserver(id, callback) {
+  return db.collection(collectionName).doc(id).onSnapshot(callback);
 }
 
-export function saveCliente(id, data) {
+export function saveRecord(id, data) {
   return new Promise((resolve, reject) => {
     if (!id) {
       // Instantiate Chance so it can be used
       var chance = new Chance();
       id = chance.bb_pin();
     }
-    db.collection("clients")
+    db.collection(collectionName)
       .doc(id)
       .set(data)
       .then(() => {
@@ -43,9 +49,9 @@ export function saveCliente(id, data) {
   });
 }
 
-export function getClientes() {
+export function getList(domain) {
   return new Promise((resolve, reject) => {
-    db.collection("clients")
+    db.collection(collectionName(domain))
       .get()
       .then((snapshot) => {
         resolve(manageRecordList(snapshot));
@@ -56,14 +62,8 @@ export function getClientes() {
   });
 }
 
-export function setClientesObserver(callback) {
-  db.collection("clients").onSnapshot(callback);
+export function setListObserver(domain, callback) {
+  db.collection(collectionName(domain)).onSnapshot(callback);
 }
 
-export function manageRecordList(snapshot) {
-  var newRecords = [];
-  snapshot.forEach((item) => {
-    newRecords.push({ id: item.id, data: item.data() });
-  });
-  return newRecords;
-}
+////#endregion

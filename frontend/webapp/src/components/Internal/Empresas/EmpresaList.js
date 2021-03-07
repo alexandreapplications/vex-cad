@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 import { TableFooter, Button, Paper, TableRow, TableHead, TableContainer, TableCell, TableBody, Table } from "@material-ui/core";
 import { Link as RouterLink } from "react-router-dom";
 
-const recordUri = "/motorista"
+const recordUri = "/empresa"
 const MotoristaList = (props) => {
     return (<React.Fragment>
         <TableContainer component={Paper}>
@@ -29,8 +29,8 @@ const MotoristaList = (props) => {
                                 <NavLink to={`${recordUri}/${row.id}`}>{row.data.nome}</NavLink>
                             </TableCell>
                             <TableCell align="center">{row.data.apelido}</TableCell>
-                            <TableCell align="center">{row.data.telefone}</TableCell>
-                            <TableCell align="center">{row.data.email}</TableCell>
+                            <TableCell align="center">{row.data.telefones}</TableCell>
+                            <TableCell align="center">{row.data.emails}</TableCell>
                             <TableCell align="center">{row.data.ativo ? "Sim" : "Não"}</TableCell>
                         </TableRow>
                     ))}

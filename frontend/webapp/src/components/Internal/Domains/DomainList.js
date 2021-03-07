@@ -18,23 +18,30 @@ const DomainList = (props) => {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {props.rows.length > 0 || (
+                    {
+                        (props.rows && props.rows.length > 0) ||
                         <TableRow key={0}>
                             <TableCell colSpan={5}>No data</TableCell>
                         </TableRow>
-                    )}
-                    {props.rows.map((row) => (
-                        <TableRow key={row.id}>
-                            <TableCell component="th" scope="row">
-                                <NavLink to={`/domain/${row.id}`}>{row.data.nome}</NavLink>
-                            </TableCell>
-                            <TableCell align="center">{row.data.apelido}</TableCell>
-                            <TableCell align="center">{row.data.ativo}</TableCell>
-                            <TableCell align="center">{row.data.email}</TableCell>
-                            <TableCell align="center">0</TableCell>
-                            <TableCell align="center">0</TableCell>
-                        </TableRow>
-                    ))}
+
+                    }
+                    {
+                        (props.rows &&
+                            props.rows.map((row) => (
+                                <TableRow key={row.id}>
+                                    <TableCell component="th" scope="row">
+                                        <NavLink to={`/domain/${row.id}`}>{row.data.nome}</NavLink>
+                                    </TableCell>
+                                    <TableCell align="center">{row.data.apelido}</TableCell>
+                                    <TableCell align="center">{row.data.ativo}</TableCell>
+                                    <TableCell align="center">{row.data.email}</TableCell>
+                                    <TableCell align="center">0</TableCell>
+                                    <TableCell align="center">0</TableCell>
+                                </TableRow>
+                            )
+                            )
+                        )
+                    }
                 </TableBody>
                 <TableFooter>
                     <TableRow>

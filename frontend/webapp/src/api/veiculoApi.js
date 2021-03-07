@@ -1,4 +1,5 @@
 import { firestore as db } from "../firebase";
+import { manageRecordList } from "./commonApi"
 // Load Chance
 const Chance = require("chance");
 
@@ -7,13 +8,7 @@ function getCollectionName(domain) {
   return `${domain}_veiculo`
 }
 
-function manageRecordList(snapshot) {
-  var newRecords = [];
-  snapshot.forEach((item) => {
-    newRecords.push({ id: item.id, data: item.data() });
-  });
-  return newRecords;
-}
+
 ////#endregion
 
 ////#region Public and common functions

@@ -2,11 +2,17 @@ import React from "react";
 import {
   Grid,
   FormControl,
+  FormControlLabel,
+  FormGroup,
   InputLabel,
   Input,
   makeStyles,
   Button,
+  TextField,
+  MenuItem,
 } from "@material-ui/core";
+import Switch from '@material-ui/core/Switch';
+import { listaUF, tipoVeiculos, tipoProd } from "../../../common/constraints"
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -31,6 +37,15 @@ function VeiculoForm(props) {
             />
           </FormControl>
         </Grid>
+        <Grid item xs={8} sm={6} className={classes.paper}>
+          <FormGroup>
+            <FormControlLabel label="Ativo" control={
+              <Switch checked={props.record.ativo} name="ativo" color="primary" onChange={props.onBoolChange} />
+            }>
+
+            </FormControlLabel>
+          </FormGroup>
+        </Grid>
         <Grid item xs={12} className={classes.paper}>
           <FormControl fullWidth={true}>
             <InputLabel>Nome</InputLabel>
@@ -44,35 +59,78 @@ function VeiculoForm(props) {
         </Grid>
         <Grid item xs={12} sm={6} className={classes.paper}>
           <FormControl fullWidth={true}>
-            <InputLabel>Nome Fantasia</InputLabel>
+            <InputLabel>Placa</InputLabel>
             <Input
               type="text"
-              value={props.record.apelido}
-              name="apelido"
+              value={props.record.placa}
+              name="placa"
               onChange={props.onChange}
             />
           </FormControl>
         </Grid>
         <Grid item xs={12} sm={6} className={classes.paper}>
           <FormControl fullWidth={true}>
-            <InputLabel>Email</InputLabel>
+            <InputLabel>Tara</InputLabel>
             <Input
               type="text"
-              value={props.record.email}
-              name="email"
+              value={props.record.tara}
+              name="tara"
               onChange={props.onChange}
             />
           </FormControl>
         </Grid>
         <Grid item xs={12} sm={6} className={classes.paper}>
           <FormControl fullWidth={true}>
-            <InputLabel>Senha</InputLabel>
-            <Input
+            <TextField
+              select
+              label="Tipo Veiculo"
               type="text"
-              value={props.record.senha}
-              name="senha"
+              value={props.record.tipoVeiculo}
+              name="tipoVeiculo"
               onChange={props.onChange}
-            />
+            >
+              {tipoVeiculos.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </TextField>
+          </FormControl>
+        </Grid>
+        <Grid item xs={12} sm={6} className={classes.paper}>
+          <FormControl fullWidth={true}>
+            <TextField
+              select
+              label="Tipo Produto"
+              type="text"
+              value={props.record.tipoProd}
+              name="tipoProd"
+              onChange={props.onChange}
+            >
+              {tipoProd.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </TextField>
+          </FormControl>
+        </Grid>
+        <Grid item xs={12} sm={6} className={classes.paper}>
+          <FormControl fullWidth={true}>
+            <TextField
+              select
+              label="UF"
+              type="text"
+              value={props.record.uf}
+              name="uf"
+              onChange={props.onChange}
+            >
+              {listaUF.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              ))}
+            </TextField>
           </FormControl>
         </Grid>
       </Grid>

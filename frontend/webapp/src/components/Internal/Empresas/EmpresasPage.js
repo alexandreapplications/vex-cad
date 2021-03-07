@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import VeiculoList from "./VeiculoList";
+import EmpresaList from "./EmpresaList";
 import {
-  setListObserver,
-} from "../../../api/veiculoApi";
+  setListObserver
+} from "../../../api/empresaApi";
 import { manageRecordList } from "../../../api/commonApi"
 
-const VeiculosPage = () => {
+const MotoristasPage = () => {
   const [records, setRecords] = useState(null);
 
   useEffect(() => {
@@ -17,8 +17,8 @@ const VeiculosPage = () => {
   }
 
   return (
-    <React.Fragment>{records && <VeiculoList rows={records} />}</React.Fragment>
+    <React.Fragment>{records && <EmpresaList rows={records} />}</React.Fragment>
   );
 };
 
-export default VeiculosPage;
+export default MotoristasPage;

@@ -6,6 +6,9 @@ import {
   Input,
   makeStyles,
   Button,
+  FormGroup,
+  FormControlLabel,
+  Switch
 } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
@@ -31,6 +34,15 @@ function VeiculoForm(props) {
             />
           </FormControl>
         </Grid>
+        <Grid item xs={8} sm={6} className={classes.paper}>
+          <FormGroup>
+            <FormControlLabel label="Ativo" control={
+              <Switch checked={props.record.ativo} name="ativo" color="primary" onChange={props.onBoolChange} />
+            }>
+
+            </FormControlLabel>
+          </FormGroup>
+        </Grid>
         <Grid item xs={12} className={classes.paper}>
           <FormControl fullWidth={true}>
             <InputLabel>Nome</InputLabel>
@@ -55,22 +67,33 @@ function VeiculoForm(props) {
         </Grid>
         <Grid item xs={12} sm={6} className={classes.paper}>
           <FormControl fullWidth={true}>
-            <InputLabel>Email</InputLabel>
+            <InputLabel>CPF</InputLabel>
             <Input
               type="text"
-              value={props.record.email}
-              name="email"
+              value={props.record.cpf}
+              name="cpf"
               onChange={props.onChange}
             />
           </FormControl>
         </Grid>
         <Grid item xs={12} sm={6} className={classes.paper}>
           <FormControl fullWidth={true}>
-            <InputLabel>Senha</InputLabel>
+            <InputLabel>Telefone</InputLabel>
             <Input
               type="text"
-              value={props.record.senha}
-              name="senha"
+              value={props.record.telefone}
+              name="telefone"
+              onChange={props.onChange}
+            />
+          </FormControl>
+        </Grid>
+        <Grid item xs={12} sm={6} className={classes.paper}>
+          <FormControl fullWidth={true}>
+            <InputLabel>Email</InputLabel>
+            <Input
+              type="text"
+              value={props.record.email}
+              name="email"
               onChange={props.onChange}
             />
           </FormControl>

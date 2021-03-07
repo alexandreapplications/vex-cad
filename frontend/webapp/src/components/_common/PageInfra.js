@@ -11,10 +11,7 @@ import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import DashboardIcon from "@material-ui/icons/Dashboard";
 import ListIcon from "@material-ui/icons/List";
-import {
-  setListObserver as setDomainsObserver,
-  manageRecordList as manageDomainList,
-} from "../../api/domainApi";
+import domainStore from "../Stores/DomainStore"
 
 const drawerWidth = 240;
 
@@ -85,7 +82,7 @@ const PageInfra = ({ children, ...initOptions }) => {
   const theme = useTheme();
   const [open, setOpen] = useState(false);
   const [user, setUser] = useState(authStore.getUser());
-  const [domains, setDomains] = useState(null);
+  const [domains, setDomains] = useState(domainStore.getDomains());
   const [selectedDomain, setSelectedDomain] = useState(null);
 
   useEffect(() => {
@@ -93,18 +90,19 @@ const PageInfra = ({ children, ...initOptions }) => {
       setUser(authStore.getUser());
     }
 
-    setDomainsObserver(handleDomainChange);
+    function onDomainChanges() {
+      setDomains(domainStore.getDomains());
+    }
 
     authStore.addChangeListener(onAuthChange);
 
+    domainStore.addChangeListener(onDomainChanges);
+
     return () => {
+      domainStore.removeChangeListener(onDomainChanges);
       authStore.removeChangeListener(onAuthChange);
     };
   });
-
-  function handleDomainChange(doc) {
-    setDomains(manageDomainList(doc));
-  }
 
   function handleDrawerOpen() {
     setOpen(true);
@@ -238,11 +236,23 @@ const PageInfra = ({ children, ...initOptions }) => {
             </ListItemIcon>
             <ListItemText>Home</ListItemText>
           </ListItem>
-          <ListItem button key="2" component={RouterLink} to="/clients">
+          <ListItem button key="2" component={RouterLink} to="/motoristas">
             <ListItemIcon>
               <ListIcon />
             </ListItemIcon>
-            <ListItemText>Clients</ListItemText>
+            <ListItemText>Motoristas</ListItemText>
+          </ListItem>
+          <ListItem button key="3" component={RouterLink} to="/veiculos">
+            <ListItemIcon>
+              <ListIcon />
+            </ListItemIcon>
+            <ListItemText>Veiculos</ListItemText>
+          </ListItem>
+          <ListItem button key="4" component={RouterLink} to="/empresas">
+            <ListItemIcon>
+              <ListIcon />
+            </ListItemIcon>
+            <ListItemText>Empresas</ListItemText>
           </ListItem>
         </List>
       </Drawer>

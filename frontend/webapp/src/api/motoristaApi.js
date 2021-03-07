@@ -1,18 +1,11 @@
 import { firestore as db } from "../firebase";
+import { manageRecordList } from "./commonApi"
 // Load Chance
 const Chance = require("chance");
 
 ////#region Private functions
 function getCollectionName(domain) {
   return `${domain}_motorista`
-}
-
-function manageRecordList(snapshot) {
-  var newRecords = [];
-  snapshot.forEach((item) => {
-    newRecords.push({ id: item.id, data: item.data() });
-  });
-  return newRecords;
 }
 ////#endregion
 

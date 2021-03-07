@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
 import MotoristaList from "./MotoristaList";
 import {
-  setListObserver,
-  manageRecordList,
-} from "../../../api/domainApi";
+  setListObserver
+} from "../../../api/motoristaApi";
+import { manageRecordList } from "../../../api/commonApi"
 
 const MotoristasPage = () => {
   const [records, setRecords] = useState(null);
 
   useEffect(() => {
-    setListObserver(handleChange);
+    setListObserver("default", handleChange);
   }, []);
 
   function handleChange(doc) {

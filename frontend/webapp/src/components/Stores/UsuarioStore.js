@@ -1,17 +1,13 @@
 import { EventEmitter } from "events";
 import Dispatcher from "../../appDispatcher";
-import {
-    setListObserver,
-    manageRecordList,
-} from "../../api/domainApi";
 
 const CHANGE_EVENT = "Change";
 
-var domains = [];
+var record = {};
 
-class DomainStore extends EventEmitter {
-    getDomains() {
-        return domains;
+class UsuarioStore extends EventEmitter {
+    getRecord() {
+        return record;
     }
 
     addChangeListener(callback) {
@@ -27,14 +23,7 @@ class DomainStore extends EventEmitter {
     }
 }
 
-const store = new DomainStore();
-
-setListObserver(handleChange)
-
-function handleChange(doc) {
-    domains = manageRecordList(doc);
-    store.emitChange()
-}
+const store = new UsuarioStore();
 
 Dispatcher.register((action) => {
     switch (action.actionType) {

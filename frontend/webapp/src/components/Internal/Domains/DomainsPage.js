@@ -1,20 +1,22 @@
 import React, { useState, useEffect } from "react";
 import DomainList from "./DomainList";
-import {
-  setListObserver,
-  manageRecordList,
-} from "../../../api/domainApi";
+import domainStore from "../../Stores/DomainStore"
 
 const DomainsPage = () => {
-  const [domains, setDomains] = useState(null);
+  const [domains, setDomains] = useState(domainStore.getDomains());
 
   useEffect(() => {
-    setListObserver(handleChange);
-  }, []);
+    function onDomainChanges() {
+      setDomains(domainStore.getDomains());
+    }
 
-  function handleChange(doc) {
-    setDomains(manageRecordList(doc));
-  }
+    domainStore.addChangeListener(onDomainChanges);
+
+    return () => {
+      domainStore.removeChangeListener(onDomainChanges);
+    }
+
+  }, [domains]);
 
   return (
     <React.Fragment>{domains && <DomainList rows={domains} />}</React.Fragment>

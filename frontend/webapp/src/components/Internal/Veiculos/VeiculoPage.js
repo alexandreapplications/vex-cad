@@ -28,16 +28,18 @@ const VeiculoPage = (props) => {
   useEffect(() => {
     const id = props.match.params.id; // from the path;
     if (id) {
-      getRecord(id).then((_record) => setRecord(_record));
-      getRecordObserver(id, handleSourceChange);
+      getRecord("default", id).then((_record) => setRecord(_record));
+      getRecordObserver("default", id, handleSourceChange);
     } else {
       setRecord({
         codigo: "",
+        ativo: true,
         nome: "",
-        apelido: "",
-        email: "",
-        senha: "",
-        usuarios: []
+        placa: "",
+        tara: "",
+        tipoProd: "",
+        tipoVeiculo: "",
+        uf: ""
       });
     }
   }, [props.match.params.id]);
@@ -46,9 +48,14 @@ const VeiculoPage = (props) => {
     setRecord(doc.data());
   }
 
+  const handleBoolChange = (event) => {
+    setRecord({ ...record, [event.target.name]: event.target.checked });
+  };
+
   function handleChange({ target }) {
     setRecord({ ...record, [target.name]: target.value });
   }
+
 
   function isValid() {
     return true;
@@ -56,7 +63,7 @@ const VeiculoPage = (props) => {
   function handleSubmit(event) {
     event.preventDefault();
     if (!isValid) return;
-    saveRecord(props.match.params.id, record)
+    saveRecord("default", props.match.params.id, record)
       .then(() => {
         props.history.push(listUri);
       })
@@ -85,6 +92,7 @@ const VeiculoPage = (props) => {
                   <VeiculoForm
                     record={record}
                     onChange={handleChange}
+                    onBoolChange={handleBoolChange}
                     onSubmit={handleSubmit}
                     onCancel={handleCancel}
                   ></VeiculoForm>

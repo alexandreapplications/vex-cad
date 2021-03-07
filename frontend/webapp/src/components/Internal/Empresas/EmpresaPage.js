@@ -3,8 +3,8 @@ import {
   getRecord,
   saveRecord,
   getRecordObserver,
-} from "../../../api/motoristaApi";
-import MotoristaForm from "./MotoristaForm";
+} from "../../../api/empresaApi";
+import EmpresaForm from "./EmpresaForm";
 import { Paper, Container, makeStyles, Grid } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
@@ -18,12 +18,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const MotoristaPage = (props) => {
+const EmpresaPage = (props) => {
   const [record, setRecord] = useState(null);
 
   const classes = useStyles();
 
-  const listUri = "/motoristas"
+  const listUri = "/empresas"
 
   useEffect(() => {
     const id = props.match.params.id; // from the path;
@@ -35,9 +35,32 @@ const MotoristaPage = (props) => {
         codigo: "",
         nome: "",
         apelido: "",
-        cpf: "",
-        telefone: "",
-        email: "",
+        cnpj: "",
+        inscricao: "",
+        enderecos: [{
+          logradouro: "",
+          numero: "",
+          complemento: "",
+          bairro: "",
+          cidade: "",
+          uf: "",
+          cep: "",
+          codibge: "",
+        }],
+        telefones: [{
+          numero: "",
+          tipo: "PR"
+        }],
+        emails: [{
+          valor: "",
+          tipo: "PR"
+        }],
+        regimeTibutario: "",
+        tipoEmissao: "",
+        dataContingencia: "",
+        horaContingencia: "",
+        tipoContingencia: "",
+        sequenciaManifesto: 0,
         ativo: true
       });
     }
@@ -48,7 +71,18 @@ const MotoristaPage = (props) => {
   }
 
   function handleChange({ target }) {
-    setRecord({ ...record, [target.name]: target.value });
+    if (target.name.indexOf('.') < 0)
+      setRecord({ ...record, [target.name]: target.value });
+    else {
+      let campos = target.name.split('.');
+      var newRecord = { ...record }
+      var change = newRecord;
+      for (var i = 0; i < campos.length - 1; i++) {
+        change = change[campos[i]];
+      }
+      change[campos[campos.length - 1]] = target.value;
+      setRecord(newRecord);
+    }
   }
 
   function isValid() {
@@ -82,13 +116,13 @@ const MotoristaPage = (props) => {
             <Grid item xs={12} sm={10} md={8}>
               <Paper>
                 <Container>
-                  <h1>Motorista</h1>
-                  <MotoristaForm
+                  <h1>Empresa</h1>
+                  <EmpresaForm
                     record={record}
                     onChange={handleChange}
                     onSubmit={handleSubmit}
                     onCancel={handleCancel}
-                  ></MotoristaForm>
+                  ></EmpresaForm>
                 </Container>
               </Paper>
             </Grid>
@@ -99,4 +133,4 @@ const MotoristaPage = (props) => {
   );
 };
 
-export default MotoristaPage;
+export default EmpresaPage;
