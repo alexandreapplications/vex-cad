@@ -67,7 +67,11 @@ export function getList(domain) {
 }
 
 export function setListObserver(domain, callback) {
-  db.collection(getCollectionName(domain)).onSnapshot(callback);
+  return db.collection(getCollectionName(domain)).onSnapshot(callback);
+}
+
+export function setListLookupObserver(domain, callback) {
+  return db.collection(getCollectionName(domain)).orderBy("nome", "asc").onSnapshot(callback);
 }
 
 ////#endregion

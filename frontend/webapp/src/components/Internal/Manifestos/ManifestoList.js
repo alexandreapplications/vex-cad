@@ -2,40 +2,43 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import { TableFooter, Button, Paper, TableRow, TableHead, TableContainer, TableCell, TableBody, Table } from "@material-ui/core";
 import { Link as RouterLink } from "react-router-dom";
+import { listaUF } from "../../../common/constraints"
 
-const recordUri = "/empresa"
-const MotoristaList = (props) => {
+const recordUri = "/manifesto"
+const VeiculoList = (props) => {
     return (<React.Fragment>
         <TableContainer component={Paper}>
-            <Table aria-label="Lista dos veiculos" stickyHeader>
+            <Table aria-label="Lista dos manifestos" stickyHeader>
                 <TableHead>
                     <TableRow>
-                        <TableCell>Nome</TableCell>
-                        <TableCell align="center">Apelido</TableCell>
-                        <TableCell align="center">Telefone</TableCell>
-                        <TableCell align="center">Email</TableCell>
+                        <TableCell>Codigo</TableCell>
+                        <TableCell align="center">Data</TableCell>
+                        <TableCell align="center">Empresa</TableCell>
+                        <TableCell align="center">Motorista</TableCell>
+                        <TableCell align="center">Veiculo</TableCell>
+                        <TableCell align="center">UF</TableCell>
                         <TableCell align="center">Ativo</TableCell>
+
                     </TableRow>
                 </TableHead>
                 <TableBody>
                     {props.rows.length > 0 || (
                         <TableRow key={0}>
-                            <TableCell colSpan={5}>No data</TableCell>
+                            <TableCell colSpan={7}>No data</TableCell>
                         </TableRow>
                     )}
                     {props.rows.map((row) => (
                         <TableRow key={row.id}>
                             <TableCell component="th" scope="row">
-                                <NavLink to={`${recordUri}/${row.id}`}>{row.data.nome}</NavLink>
+                                <NavLink to={`${recordUri}/${row.id}`}>{row.data.codigo}</NavLink>
                             </TableCell>
-                            <TableCell align="center">{row.data.apelido}</TableCell>
-                            <TableCell align="center">{row.data.telefones.map((item, idx) => (
-                                <React.Fragment>{idx > 0 ? ", " : ""}{item.numero}</React.Fragment>
-                            ))}</TableCell>
-                            <TableCell align="center">{row.data.emails.map((item, idx) => (
-                                <React.Fragment>{idx > 0 ? ", " : ""}{item.valor}</React.Fragment>
-                            ))}</TableCell>
+                            <TableCell align="center">{row.data.codigo}</TableCell>
+                            <TableCell align="center">{row.data.idEmpresa}</TableCell>
+                            <TableCell align="center">{row.data.idMotorista}</TableCell>
+                            <TableCell align="center">{row.data.idVeiculo}</TableCell>
+                            <TableCell align="center">{listaUF.find(x => x.value === row.data.uf).label}</TableCell>
                             <TableCell align="center">{row.data.ativo ? "Sim" : "Não"}</TableCell>
+
                         </TableRow>
                     ))}
                 </TableBody>
@@ -52,4 +55,4 @@ const MotoristaList = (props) => {
     )
 }
 
-export default MotoristaList;
+export default VeiculoList;

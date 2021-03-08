@@ -17,13 +17,13 @@ function Telefone(props) {
     const classes = useStyles();
     return (
         <React.Fragment>
-            <Grid item xs={12} sm={6} className={classes.paper}>
+            <Grid item xs={6} sm={6} lg={4} className={classes.paper}>
                 <FormControl fullWidth={true}>
                     <InputLabel>Telefone</InputLabel>
                     <Input
                         type="text"
                         value={props.record.numero}
-                        name={`telefones.${props.idx}.numero`}
+                        name={`${props.collectionName}.${props.idx}.numero`}
                         onChange={props.onChange}
                     />
                 </FormControl>

@@ -113,10 +113,10 @@ const EmpresaPage = (props) => {
             alignItems="center"
             direction="column"
           >
-            <Grid item xs={12} sm={10} md={8}>
+            <Grid item xs={12} sm={10} xl={8}>
               <Paper>
                 <Container>
-                  <h1>Empresa</h1>
+                  <h1>{props.match.params.id ? "Editar" : "Incluir"} Empresa</h1>
                   <EmpresaForm
                     record={record}
                     onChange={handleChange}

@@ -17,6 +17,8 @@ import DomainsPage from "./Internal/Domains/DomainsPage";
 import DomainPage from "./Internal/Domains/DomainPage";
 import messageStore from "./Stores/MessageStore";
 import LandingPage from "./Internal/LandingPage";
+import ManifestosPage from "./Internal/Manifestos/ManifestosPage";
+import ManifestoPage from "./Internal/Manifestos/ManifestoPage";
 
 const App = (...props) => {
   const [user, setUser] = useState(authStore.getUser());
@@ -72,6 +74,9 @@ const App = (...props) => {
             <PrivateRoute path="/empresas" component={EmpresasPage} />
             <PrivateRoute path="/empresa/:id" component={EmpresaPage} />
             <PrivateRoute path="/empresa" component={EmpresaPage} />
+            <PrivateRoute path="/manifestos" component={ManifestosPage} />
+            <PrivateRoute path="/manifesto/:id" component={ManifestoPage} />
+            <PrivateRoute path="/manifesto" component={ManifestoPage} />
             <Route exact path="/about" component={AboutPage} />
             <Route path="/signin" component={SignInPage} />
             <Route path="/signup" component={SignUpPage} />

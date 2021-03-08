@@ -5,8 +5,10 @@ const Chance = require("chance");
 
 ////#region Private functions
 function getCollectionName(domain) {
-  return `${domain}_motorista`
+  return `${domain}_mainfesto`
 }
+
+
 ////#endregion
 
 ////#region Public and common functions
@@ -65,12 +67,7 @@ export function getList(domain) {
 }
 
 export function setListObserver(domain, callback) {
-  return db.collection(getCollectionName(domain)).onSnapshot(callback);
+  db.collection(getCollectionName(domain)).onSnapshot(callback);
 }
-
-export function setListLookupObserver(domain, callback) {
-  return db.collection(getCollectionName(domain)).orderBy("nome", "asc").onSnapshot(callback);
-}
-
 
 ////#endregion

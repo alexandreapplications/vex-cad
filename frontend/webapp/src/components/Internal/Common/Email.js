@@ -17,13 +17,13 @@ function Email(props) {
     const classes = useStyles();
     return (
         <React.Fragment>
-            <Grid item xs={12} sm={6} className={classes.paper}>
+            <Grid item xs={12} lg={8} className={classes.paper}>
                 <FormControl fullWidth={true}>
                     <InputLabel>Email</InputLabel>
                     <Input
                         type="text"
                         value={props.record.valor}
-                        name={`e2mails.${props.idx}.valor`}
+                        name={`${props.collectionName}.${props.idx}.valor`}
                         onChange={props.onChange}
                     />
                 </FormControl>

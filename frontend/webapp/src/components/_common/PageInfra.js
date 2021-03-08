@@ -254,6 +254,12 @@ const PageInfra = ({ children, ...initOptions }) => {
             </ListItemIcon>
             <ListItemText>Empresas</ListItemText>
           </ListItem>
+          <ListItem button key="5" component={RouterLink} to="/manifestos">
+            <ListItemIcon>
+              <ListIcon />
+            </ListItemIcon>
+            <ListItemText>Manifestos</ListItemText>
+          </ListItem>
         </List>
       </Drawer>
       <main

@@ -88,7 +88,7 @@ const VeiculoPage = (props) => {
             <Grid item xs={12} sm={10} md={8}>
               <Paper>
                 <Container>
-                  <h1>Veiculo</h1>
+                  <h1>{props.match.params.id ? "Editar" : "Incluir"} Veículo</h1>
                   <VeiculoForm
                     record={record}
                     onChange={handleChange}

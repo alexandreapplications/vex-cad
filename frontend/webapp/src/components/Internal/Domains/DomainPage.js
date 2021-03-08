@@ -79,7 +79,7 @@ const DomainPage = (props) => {
             <Grid item xs={12} sm={10} md={8}>
               <Paper>
                 <Container>
-                  <h1>Empresa</h1>
+                  <h1>{props.match.params.id ? "Editar" : "Incluir"} Parametros</h1>
                   <DomainForm
                     domain={domain}
                     onChange={handleChange}
