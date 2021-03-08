@@ -1,9 +1,13 @@
-const regexEmail = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/g
-const regexInteger = /^[0-9]+$/g;
+const regexEmail = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+const regexInteger = /^[0-9]+$/;
+const regexBrazilCellPhone = /^\+55[- ]{0,1}\d{2}[- ]{0,1}\d{5}[- ]{0,1}\d{4}$/;
 export function isPreenchido(obj) {
     if (obj && obj.length > 0)
         return null;
     return `Este campo é obrigatório`
+}
+export function isWhatsappPhone(text) {
+    return regexBrazilCellPhone.test(text);
 }
 export function hasMinimoLength(obj, size) {
     if (!obj || obj.length >= size)

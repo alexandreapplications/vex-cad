@@ -9,7 +9,8 @@ import {
   TextField,
   MenuItem,
 } from "@material-ui/core";
-import { tipoEmail, tipoTelefone } from "../../../common/constraints"
+import { tipoEmail, tipoTelefone } from "../../../common/constraints";
+import { isWhatsappPhone } from "../../../common/utils";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -103,7 +104,7 @@ function VeiculoForm(props) {
                   value={item.tipo}
                   name={`emails.${idx}.tipo`}
                   fullWidth={true}
-                  error={props.error.email && props.error.emails[idx].tipo ? true : false}
+                  error={props.error.emails && props.error.emails[idx].tipo ? true : false}
                   onChange={props.onChange}
                   helperText="Tipo Email"
                 >
@@ -127,12 +128,12 @@ function VeiculoForm(props) {
                 <TextField
                   type="text"
                   label="Telefone"
-                  value={item.valor}
+                  value={item.numero}
                   name={`telefones.${idx}.numero`}
                   fullWidth={true}
-                  error={props.error.apelido ? true : false}
+                  error={props.error.telefones && props.error.telefones[idx].numero ? true : false}
                   onChange={props.onChange}
-                  helperText={props.error.apelido || "Telefone do Motorista"}
+                  helperText={(props.error.telefones && props.error.telefones[idx].numero) || "Telefone do Motorista"}
                 />
               </Grid>
               <Grid item xs={8} sm={4} className={classes.paper}>
@@ -143,8 +144,9 @@ function VeiculoForm(props) {
                   value={item.tipo}
                   name={`telefones.${idx}.tipo`}
                   fullWidth={true}
+                  error={props.error.telefones && props.error.telefones[idx].tipo ? true : false}
                   onChange={props.onChange}
-                  helperText="Tipo Telefone"
+                  helperText={(props.error.telefones && props.error.telefones[idx].tipo) || "Tipo Telefone"}
                 >
                   {tipoTelefone.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
@@ -156,7 +158,7 @@ function VeiculoForm(props) {
               <Grid item xs={4} sm={2} className={classes.paper}>
                 <FormGroup>
                   <FormControlLabel label="Whatsapp" control={
-                    <Switch checked={item.whatsApp} name={`telefones.${idx}.whatsApp`} color="primary" onChange={props.onBoolChange} />
+                    <Switch checked={item.whatsApp} disabled={!isWhatsappPhone(item.numero)} name={`telefones.${idx}.whatsApp`} color="primary" onChange={props.onBoolChange} />
                   }>
                   </FormControlLabel>
                 </FormGroup>

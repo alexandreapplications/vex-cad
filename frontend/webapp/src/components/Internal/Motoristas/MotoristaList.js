@@ -2,7 +2,7 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import { TableFooter, Button, Paper, TableRow, TableHead, TableContainer, TableCell, TableBody, Table } from "@material-ui/core";
 import { Link as RouterLink } from "react-router-dom";
-
+import { Mail, WhatsApp } from "@material-ui/icons";
 const recordUri = "/motorista"
 const MotoristaList = (props) => {
     return (<React.Fragment>
@@ -29,8 +29,21 @@ const MotoristaList = (props) => {
                                 <NavLink to={`${recordUri}/${row.id}`}>{row.data.nome}</NavLink>
                             </TableCell>
                             <TableCell align="center">{row.data.apelido}</TableCell>
-                            <TableCell align="center">{row.data.telefone}</TableCell>
-                            <TableCell align="center">{row.data.email}</TableCell>
+                            <TableCell align="center">{row.data.telefones.map((item, idx) => (
+                                <React.Fragment><span>{idx === 0 || ", "}</span>
+                                    {
+                                        item.whatsApp ?
+                                            (<React.Fragment><a href={`https://api.whatsapp.com/send?phone=${item.numero}`}>{item.numero}</a> <WhatsApp></WhatsApp></React.Fragment>)
+                                            : <span>{item.numero}</span>
+                                    }
+                                </React.Fragment>
+                            ))}</TableCell>
+                            <TableCell align="center">{row.data.emails.map((item, idx) => (
+                                <React.Fragment>
+                                    <span>{idx === 0 || ", "}</span>
+                                    <a href={`mailto:${item.valor}`}>{item.valor}</a> <Mail></Mail>
+                                </React.Fragment>
+                            ))}</TableCell>
                             <TableCell align="center">{row.data.ativo ? "Sim" : "Não"}</TableCell>
                         </TableRow>
                     ))}

@@ -6,7 +6,7 @@ import {
 } from "../../../api/motoristaApi";
 import MotoristaForm from "./MotoristaForm";
 import { Paper, Container, makeStyles, Grid } from "@material-ui/core";
-import { hasLength, hasCPFValid, hasEmailValid, isStringValid, isPreenchido } from "../../../common/utils"
+import { hasLength, hasCPFValid, hasEmailValid, isStringValid, isPreenchido, isWhatsappPhone } from "../../../common/utils"
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -114,10 +114,6 @@ const MotoristaPage = (props) => {
     const cpf = isPreenchido(record.cpf) || hasCPFValid(record.cpf);
     if (cpf) _errors.cpf = cpf;
 
-    // const telefone = isPreenchido(record.telefone) || hasMinimoLength(record.telefone, 8) || hasMaxLength(record.telefone, 20);
-    // if (telefone) _errors.telefone = telefone;
-
-
     var emailErrors = record.emails.map(element => {
       const valor = isPreenchido(element.valor) || hasEmailValid(element.valor);
       const tipo = isPreenchido(element.tipo);
@@ -132,7 +128,23 @@ const MotoristaPage = (props) => {
       _errors.emails = emailErrors;
     }
 
+    record.telefones.forEach(element => {
+      if (!isWhatsappPhone(element.numero) && element.whatsApp)
+        element.whatsApp = false;
+    })
+    var telefoneErrors = record.telefones.map(element => {
+      const numero = isPreenchido(element.numero)
+      const tipo = isPreenchido(element.tipo);
 
+      return {
+        isValid: numero || tipo ? false : true,
+        numero,
+        tipo
+      }
+    });
+    if (telefoneErrors.filter(x => !x.isValid).length > 0) {
+      _errors.telefones = telefoneErrors;
+    }
     setErrors(_errors);
     // Form is valid;
     return Object.keys(_errors).length === 0;
@@ -181,7 +193,6 @@ const MotoristaPage = (props) => {
               </Paper>
             </Grid>
           </Grid>
-          {JSON.stringify(errors)}
         </React.Fragment>
       )}
     </React.Fragment>
