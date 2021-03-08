@@ -3,6 +3,9 @@ import { NavLink } from "react-router-dom";
 import { TableFooter, Button, Paper, TableRow, TableHead, TableContainer, TableCell, TableBody, Table } from "@material-ui/core";
 import { Link as RouterLink } from "react-router-dom";
 import { listaUF } from "../../../common/constraints"
+import empresaStore from "../../Stores/EmpresaStore"
+import motoristaStore from "../../Stores/MotoristaStore"
+import veiculoStore from "../../Stores/VeiculoStore"
 
 const recordUri = "/manifesto"
 const VeiculoList = (props) => {
@@ -33,9 +36,9 @@ const VeiculoList = (props) => {
                                 <NavLink to={`${recordUri}/${row.id}`}>{row.data.codigo}</NavLink>
                             </TableCell>
                             <TableCell align="center">{row.data.codigo}</TableCell>
-                            <TableCell align="center">{row.data.idEmpresa}</TableCell>
-                            <TableCell align="center">{row.data.idMotorista}</TableCell>
-                            <TableCell align="center">{row.data.idVeiculo}</TableCell>
+                            <TableCell align="center">{empresaStore.getLookupName(row.data.idEmpresa)}</TableCell>
+                            <TableCell align="center">{motoristaStore.getLookupName(row.data.idMotorista)}</TableCell>
+                            <TableCell align="center">{veiculoStore.getLookupName(row.data.idVeiculo)}</TableCell>
                             <TableCell align="center">{listaUF.find(x => x.value === row.data.uf).label}</TableCell>
                             <TableCell align="center">{row.data.ativo ? "Sim" : "Não"}</TableCell>
 

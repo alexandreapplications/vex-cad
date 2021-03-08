@@ -30,7 +30,17 @@ export const tipoProd = [
         label: "Refrigerado"
     }
 ]
-
+export const tipoEmail = [
+    { "label": "Principal", "value": "PR" },
+    { "label": "Comercial", "value": "CM" },
+    { "label": "Pessoal", "value": "PE" },
+]
+export const tipoTelefone = [
+    { "label": "Celular Comercial", "value": "CELCOM" },
+    { "label": "Celular Pessoal", "value": "CELPES" },
+    { "label": "Fixo Comercial", "value": "FIXCOM" },
+    { "label": "Fixo Pessoal", "value": "FIXPES" },
+]
 export const listaUF = [
     { "label": "Acre", "value": "AC" },
     { "label": "Alagoas", "value": "AL" },

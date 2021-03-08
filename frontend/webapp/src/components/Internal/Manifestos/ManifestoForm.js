@@ -387,7 +387,7 @@ function ManifestoForm(props) {
               )}
               {
                 props.record.notasFiscais.map((nf, idx) => (
-                  <TableRow>
+                  <TableRow key={idx}>
                     <TableCell>
                       {idx + 1}
                     </TableCell>

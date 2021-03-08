@@ -6,10 +6,10 @@ import {
 } from "../../../api/manifestoApi";
 import ManifestoForm from "./ManifestoForm";
 import { Paper, Container, makeStyles, Grid } from "@material-ui/core";
-import { setListLookupObserver as selListEmpresaObserver } from "../../../api/empresaApi"
-import { setListLookupObserver as selListMotoristaObserver } from "../../../api/motoristaApi"
-import { setListLookupObserver as selListVeiculoObserver } from "../../../api/veiculoApi"
 import { manageRecordList } from "../../../api/commonApi"
+import empresaStore from "../../Stores/EmpresaStore"
+import motoristaStore from "../../Stores/MotoristaStore"
+import veiculoStore from "../../Stores/VeiculoStore"
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -24,9 +24,10 @@ const useStyles = makeStyles((theme) => ({
 
 const ManifestoPage = (props) => {
   const [record, setRecord] = useState(null);
-  const [empresas, setEmpresas] = useState(null);
-  const [motoristas, setMotoristas] = useState(null);
-  const [veiculos, setVeiculos] = useState(null);
+  const [empresas, setEmpresas] = useState(empresaStore.getRecords());
+  const [motoristas, setMotoristas] = useState(motoristaStore.getRecords());
+  const [veiculos, setVeiculos] = useState(veiculoStore.getRecords());
+
   const emptyNFE = () => (
     {
       chave: "",
@@ -45,9 +46,15 @@ const ManifestoPage = (props) => {
   const listUri = "/manifestos"
 
   useEffect(() => {
-    var unsubscribeListEmpresaObserver = selListEmpresaObserver("default", handleEmpresaChange);
-    var unsubscribeListMotoristaObserver = selListMotoristaObserver("default", handleMotoristaChange);
-    var unsubscribeListVeiculoObserver = selListVeiculoObserver("default", handleVeiculoChange);
+    function onEmpresasChange(doc) {
+      setEmpresas(manageRecordList(doc));
+    }
+    function onMotoristasChange(doc) {
+      setMotoristas(manageRecordList(doc));
+    }
+    function onVeiculosChange(doc) {
+      setVeiculos(manageRecordList(doc));
+    }
     const id = props.match.params.id; // from the path;
     if (id) {
       getRecord("default", id).then((_record) => setRecord(_record));
@@ -85,9 +92,9 @@ const ManifestoPage = (props) => {
       });
     }
     return () => {
-      unsubscribeListEmpresaObserver();
-      unsubscribeListMotoristaObserver();
-      unsubscribeListVeiculoObserver();
+      veiculoStore.removeChangeListener(onVeiculosChange);
+      motoristaStore.removeChangeListener(onMotoristasChange);
+      empresaStore.removeChangeListener(onEmpresasChange);
     }
   }, [props.match.params.id]);
 
@@ -116,15 +123,7 @@ const ManifestoPage = (props) => {
   }
 
 
-  function handleEmpresaChange(doc) {
-    setEmpresas(manageRecordList(doc));
-  }
-  function handleMotoristaChange(doc) {
-    setMotoristas(manageRecordList(doc));
-  }
-  function handleVeiculoChange(doc) {
-    setVeiculos(manageRecordList(doc));
-  }
+
 
   function addNFE() {
     var newRecord = { ...record };
