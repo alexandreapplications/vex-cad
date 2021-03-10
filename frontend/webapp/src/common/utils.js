@@ -1,6 +1,7 @@
 const regexEmail = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 const regexInteger = /^[0-9]+$/;
 const regexBrazilCellPhone = /^\+55[- ]{0,1}\d{2}[- ]{0,1}\d{5}[- ]{0,1}\d{4}$/;
+const regexPlaca = /^[\dA-Z]{7}/;
 export function isPreenchido(obj) {
     if (obj && obj.length > 0)
         return null;
@@ -44,6 +45,12 @@ export function hasEmailValid(obj) {
     return 'E-mail inválido'
 }
 
+export function hasPlacaValida(text) {
+    if (!text || regexPlaca(text))
+        return null;
+
+    return 'Placa inválida'
+}
 
 export function isStringValid(obj, obrigatorio, min, max) {
     if (!obrigatorio && !obj)

@@ -1,3 +1,5 @@
-// export default {
-//   AUTH_HAS_CHANGED: "AUTH_HAS_CHANGED",
-// };
+const actionTypes = {
+    CHANGE_AUTHENTICATION: "CHANGE_AUTHENTICATION",
+    CHANGE_USER: "CHANGE_USER"
+};
+export default actionTypes;

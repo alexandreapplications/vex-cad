@@ -6,6 +6,7 @@ import {
 } from "../../../api/veiculoApi";
 import VeiculoForm from "./VeiculoForm";
 import { Paper, Container, makeStyles, Grid } from "@material-ui/core";
+import { hasLength, isPreenchido, isStringValid, hasPlacaValida, isInteger } from "../../../common/utils";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -20,6 +21,7 @@ const useStyles = makeStyles((theme) => ({
 
 const VeiculoPage = (props) => {
   const [record, setRecord] = useState(null);
+  const [errors, setErrors] = useState({});
 
   const classes = useStyles();
 
@@ -58,8 +60,25 @@ const VeiculoPage = (props) => {
 
 
   function isValid() {
-    return true;
+    const _errors = {};
+
+    const codigo = isPreenchido(record.codigo) /*|| isInteger(record.codigo)*/ || hasLength(record.codigo, 5)
+    if (codigo) _errors.codigo = codigo;
+
+    const nome = isStringValid(record.nome, true, 10, 80);
+    if (nome) _errors.nome = nome;
+
+    const placa = isPreenchido(record.placa) || hasPlacaValida(record.placa)
+    if (placa) _errors.placa = placa;
+
+    const tara = isPreenchido(record.tara) || isInteger(record.tara)
+    if (tara) _errors.tara = tara;
+
+    setErrors(_errors);
+    // Form is valid;
+    return Object.keys(_errors).length === 0;
   }
+
   function handleSubmit(event) {
     event.preventDefault();
     if (!isValid) return;
@@ -91,6 +110,7 @@ const VeiculoPage = (props) => {
                   <h1>{props.match.params.id ? "Editar" : "Incluir"} Veículo</h1>
                   <VeiculoForm
                     record={record}
+                    error={errors}
                     onChange={handleChange}
                     onBoolChange={handleBoolChange}
                     onSubmit={handleSubmit}

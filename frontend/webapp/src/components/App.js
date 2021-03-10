@@ -7,6 +7,7 @@ import SignInPage from "./Security/SignInPage";
 import SignUpPage from "./Security/SignUpPage";
 import PageNotFound from "./PageNotFound";
 import authStore from "./Stores/AuthStore";
+import usuarioStore from "./Stores/UsuarioStore";
 import VeiculoPage from "./Internal/Veiculos/VeiculoPage";
 import VeiculosPage from "./Internal/Veiculos/VeiculosPage";
 import MotoristaPage from "./Internal/Motoristas/MotoristaPage";
@@ -21,46 +22,52 @@ import ManifestosPage from "./Internal/Manifestos/ManifestosPage";
 import ManifestoPage from "./Internal/Manifestos/ManifestoPage";
 
 const App = (...props) => {
-  const [user, setUser] = useState(authStore.getUser());
+  const [autenticacao, setAutenticacao] = useState(authStore.getUser());
   const [inicializado, setInicializado] = useState(false);
+  const [usuario, setUsuario] = useState(usuarioStore.getRecord());
   const [messages, setMessages] = useState(messageStore.getMessages());
 
   useEffect(() => {
     function onAuthChange() {
-      setUser(authStore.getUser());
+      const _autenticacao = authStore.getUser();
+      setAutenticacao(_autenticacao);
       setInicializado(authStore.isInitialized());
     }
     function onMessageChange() {
       setMessages(messageStore.getMessages());
     }
+    function onUsuarioChange() {
+      setUsuario(usuarioStore.getRecord());
+    }
 
     authStore.addChangeListener(onAuthChange);
     messageStore.addChangeListener(onMessageChange);
+    usuarioStore.addChangeListener(onUsuarioChange);
 
     return () => {
       authStore.removeChangeListener(onAuthChange);
       messageStore.removeChangeListener(onMessageChange);
+      usuarioStore.removeChangeListener(onUsuarioChange);
     };
   });
 
   const PrivateRoute = ({ component: Component, ...rest }) =>
-    user ? (
+    autenticacao ? (
       <Route {...rest} render={(props) => <Component {...props} />} />
     ) : (
-        <Redirect
-          to={{
-            pathname: "/signin",
-            state: { from: rest.path },
-          }}
-        />
-      );
+      <Redirect
+        to={{
+          pathname: "/signin",
+          state: { from: rest.path },
+        }}
+      />
+    );
 
   return (
     <React.Fragment>
       {inicializado ? (
-        <PageInfra user={user}>
+        <PageInfra>
           <Switch>
-            <Route exact path="/" component={HomePage} />
             <PrivateRoute path="/dashboard" component={LandingPage} />
             <PrivateRoute path="/domains" component={DomainsPage} />
             <PrivateRoute path="/domain/:id" component={DomainPage} />
@@ -77,15 +84,18 @@ const App = (...props) => {
             <PrivateRoute path="/manifestos" component={ManifestosPage} />
             <PrivateRoute path="/manifesto/:id" component={ManifestoPage} />
             <PrivateRoute path="/manifesto" component={ManifestoPage} />
+            <Route exact path="/" component={HomePage} />
             <Route exact path="/about" component={AboutPage} />
             <Route path="/signin" component={SignInPage} />
             <Route path="/signup" component={SignUpPage} />
             <Route component={PageNotFound} />
           </Switch>
+          <p>{JSON.stringify(usuario)}</p>
         </PageInfra>
+
       ) : (
-          <p>inicializando</p>
-        )}
+        <p>inicializando</p>
+      )}
       {messages.map((item) => (
         <p key={item.id}>{item.value}</p>
       ))}

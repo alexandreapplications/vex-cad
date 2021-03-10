@@ -1,7 +1,7 @@
 import { EventEmitter } from "events";
 import Dispatcher from "../../appDispatcher";
 import { auth } from "../../firebase";
-
+import actionTypes from "../../actions/actionTypes"
 const CHANGE_EVENT = "Change";
 
 let initialized = false;
@@ -52,6 +52,7 @@ Dispatcher.register((action) => {
 auth.onAuthStateChanged(() => {
   initialized = true;
   store.emitChange();
+  Dispatcher.dispatch({ actionType: actionTypes.CHANGE_AUTHENTICATION, authentication: store.getUser() })
 });
 
 export default store;

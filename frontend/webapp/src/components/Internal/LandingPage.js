@@ -3,7 +3,7 @@ import React from "react";
 const LandingPage = () => {
   return (
     <div>
-      <h1>Landing</h1>
+      <h1>Sistema de Geração de NFe para Romaneio</h1>
       <p>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec
         odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi. Nulla

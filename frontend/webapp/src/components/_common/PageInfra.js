@@ -6,12 +6,14 @@ import Hidden from "@material-ui/core/Hidden";
 import { Link as RouterLink, Redirect } from "react-router-dom";
 import UserComponent from "./UserComponent";
 import authStore from "../Stores/AuthStore";
+import usuarioStore from "../Stores/UsuarioStore";
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import DashboardIcon from "@material-ui/icons/Dashboard";
 import ListIcon from "@material-ui/icons/List";
 import domainStore from "../Stores/DomainStore"
+import HeaderComponent from "./HeaderComponent";
 
 const drawerWidth = 240;
 
@@ -81,26 +83,34 @@ const PageInfra = ({ children, ...initOptions }) => {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = useState(false);
-  const [user, setUser] = useState(authStore.getUser());
+  const [autenticacao, setAutenticacao] = useState(authStore.getUser());
+  const [usuario, setUsuario] = useState(null);
   const [domains, setDomains] = useState(domainStore.getDomains());
   const [selectedDomain, setSelectedDomain] = useState(null);
 
   useEffect(() => {
     function onAuthChange() {
-      setUser(authStore.getUser());
+      setAutenticacao(authStore.getUser());
     }
 
     function onDomainChanges() {
       setDomains(domainStore.getDomains());
     }
 
+    function onUsuarioChange() {
+      setUsuario(usuarioStore.getRecord());
+    }
+
     authStore.addChangeListener(onAuthChange);
 
     domainStore.addChangeListener(onDomainChanges);
 
+    usuarioStore.addChangeListener(onUsuarioChange);
+
     return () => {
       domainStore.removeChangeListener(onDomainChanges);
       authStore.removeChangeListener(onAuthChange);
+      usuarioStore.removeChangeListener(onUsuarioChange);
     };
   });
 
@@ -138,6 +148,8 @@ const PageInfra = ({ children, ...initOptions }) => {
             aria-label="Open drawer"
             onClick={handleDrawerOpen}
             edge="start"
+            disabled={!autenticacao}
+            hidden={!autenticacao}
             className={clsx(classes.menuButton, open && classes.hide)}
           >
             <MenuIcon />
@@ -148,9 +160,9 @@ const PageInfra = ({ children, ...initOptions }) => {
             </Typography>
           </Hidden>
           <Hidden mdDown={true}>
-            {user ? (
+            {autenticacao ? (
               <>
-                <Button aria-label="account of current user"
+                <Button aria-label="account of current autenticacao"
                   aria-controls="menu-appbar"
                   aria-haspopup="true"
                   onClick={handleMenu}
@@ -188,22 +200,15 @@ const PageInfra = ({ children, ...initOptions }) => {
               </Button>
               </>
             ) : (
-                <React.Fragment>
-                  <Button color="inherit" component={RouterLink} to="/">
-                    Home
-                </Button>
-                  <Button color="inherit" component={RouterLink} to="/dashboard">
-                    Sign in
-                </Button>
-                </React.Fragment>
-              )}
-            {user ? (
-              <UserComponent user={authStore.getUser()}></UserComponent>
+              <HeaderComponent></HeaderComponent>
+            )}
+            {autenticacao ? (
+              <UserComponent autenticacao={authStore.getUser()}></UserComponent>
             ) : (
-                <Button color="inherit" component={RouterLink} to="/about">
-                  About
-                </Button>
-              )}
+              <Button color="inherit" component={RouterLink} to="/about">
+                About
+              </Button>
+            )}
           </Hidden>
         </Toolbar>
       </AppBar>
@@ -224,8 +229,8 @@ const PageInfra = ({ children, ...initOptions }) => {
             {theme.direction === "ltr" ? (
               <ChevronLeftIcon />
             ) : (
-                <ChevronRightIcon />
-              )}
+              <ChevronRightIcon />
+            )}
           </IconButton>
         </div>
         <Divider />
@@ -269,6 +274,7 @@ const PageInfra = ({ children, ...initOptions }) => {
       >
         <div className={classes.drawerHeader} />
         {children}
+        <p>{JSON.stringify(usuario)}</p>
       </main>
     </div>
   );
