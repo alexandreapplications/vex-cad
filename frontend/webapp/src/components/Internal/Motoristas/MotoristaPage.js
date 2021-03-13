@@ -1,12 +1,8 @@
 import React, { useEffect, useState } from "react";
-import {
-  getRecord,
-  saveRecord,
-  getRecordObserver,
-} from "../../../api/motoristaApi";
 import MotoristaForm from "./MotoristaForm";
 import { Paper, Container, makeStyles, Grid } from "@material-ui/core";
-import { hasLength, hasCPFValid, hasEmailValid, isStringValid, isPreenchido, isWhatsappPhone } from "../../../common/utils"
+import { hasLength, hasCPFValid, hasEmailValid, isStringValid, isPreenchido, isWhatsappPhone, hasNovo } from "../../../common/utils"
+import store from "../../Stores/MotoristaStore"
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -26,35 +22,26 @@ const MotoristaPage = (props) => {
   const classes = useStyles();
 
   const listUri = "/motoristas"
+  const novo = "novo";
 
   useEffect(() => {
-    const id = props.match.params.id; // from the path;
-    if (id) {
-      getRecord("default", id).then((_record) => setRecord(_record));
-      getRecordObserver("default", id, handleSourceChange);
+    function onStoreDataChange(doc) {
+      setRecord(doc);
+    }
+
+    if (props.match.params.id === novo) {
+      setRecord(store.getEmptyRecord());
     } else {
-      setRecord({
-        codigo: "",
-        nome: "",
-        apelido: "",
-        cpf: "",
-        telefones: [{
-          numero: "",
-          tipo: "CELCOM",
-          whatsApp: false
-        }],
-        emails: [{
-          valor: "",
-          tipo: "PR"
-        }],
-        ativo: true
-      });
+      store.getRecord(props.match.params.id).then(doc => setRecord(doc)).catch(error => alert(error))
+    }
+
+
+    return () => {
+      store.removeChangeListener(onStoreDataChange);
     }
   }, [props.match.params.id]);
 
-  function handleSourceChange(doc) {
-    setRecord(doc.data());
-  }
+
   const handleBoolChange = (event) => {
     if (event.target.name.indexOf('.') < 0)
       setRecord({ ...record, [event.target.name]: event.target.checked });
@@ -102,8 +89,8 @@ const MotoristaPage = (props) => {
 
   function isValid() {
     const _errors = {};
-    const codigo = isPreenchido(record.codigo) /*|| isInteger(record.codigo)*/ || hasLength(record.codigo, 5)
-    if (codigo) _errors.codigo = codigo;
+    const _codigo = isPreenchido(record.codigo) /*|| isInteger(record.codigo)*/ || hasLength(record.codigo, 5) || hasNovo(record.codigo)
+    if (_codigo) _errors.codigo = _codigo;
 
     const nome = isStringValid(record.nome, true, 10, 80);
     if (nome) _errors.nome = nome;
@@ -153,7 +140,8 @@ const MotoristaPage = (props) => {
   function handleSubmit(event) {
     event.preventDefault();
     if (!isValid()) return false;
-    saveRecord("default", props.match.params.id, record)
+
+    props.match.params.id === novo ? store.doAddRecord(record) : store.doUpdateRecord(record)
       .then(() => {
         props.history.push(listUri);
       })
@@ -161,7 +149,8 @@ const MotoristaPage = (props) => {
         alert(reason);
       });
   }
-  function handleCancel(event) {
+
+  function handleCancel() {
     props.history.push(listUri);
   }
 

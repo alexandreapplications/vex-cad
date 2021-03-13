@@ -4,15 +4,13 @@ import { manageRecordList } from "./commonApi"
 const Chance = require("chance");
 
 ////#region Private functions
-function getCollectionName(domain) {
-    return `${domain}_empresa`
-}
+export const collectionName = "empresa"
 ////#endregion
 
 ////#region Public and common functions
-export function getRecord(domain, id) {
+export function getRecord(id) {
     return new Promise((resolve, reject) => {
-        db.collection(getCollectionName(domain))
+        db.collection(collectionName)
             .doc(id)
             .get()
             .then((doc) => {
@@ -28,18 +26,18 @@ export function getRecord(domain, id) {
     });
 }
 
-export function getRecordObserver(domain, id, callback) {
-    return db.collection(getCollectionName(domain)).doc(id).onSnapshot(callback);
+export function getRecordObserver(id, callback) {
+    return db.collection(collectionName).doc(id).onSnapshot(callback);
 }
 
-export function saveRecord(domain, id, data) {
+export function saveRecord(id, data) {
     return new Promise((resolve, reject) => {
         if (!id) {
             // Instantiate Chance so it can be used
             var chance = new Chance();
             id = chance.bb_pin();
         }
-        db.collection(getCollectionName(domain))
+        db.collection(collectionName)
             .doc(id)
             .set(data)
             .then(() => {
@@ -51,9 +49,9 @@ export function saveRecord(domain, id, data) {
     });
 }
 
-export function getList(domain) {
+export function getList() {
     return new Promise((resolve, reject) => {
-        db.collection(getCollectionName(domain))
+        db.collection(collectionName)
             .get()
             .then((snapshot) => {
                 resolve(manageRecordList(snapshot));
@@ -64,11 +62,11 @@ export function getList(domain) {
     });
 }
 
-export function setListObserver(domain, callback) {
-    return db.collection(getCollectionName(domain)).onSnapshot(callback);
+export function setListObserver(callback) {
+    return db.collection(collectionName).onSnapshot(callback);
 }
 
-export function setListLookupObserver(domain, callback) {
-    return db.collection(getCollectionName(domain)).orderBy("nome", "asc").onSnapshot(callback);
+export function setListLookupObserver(callback) {
+    return db.collection(collectionName).orderBy("nome", "asc").onSnapshot(callback);
 }
 ////#endregion

@@ -38,7 +38,7 @@ class VeiculoStore extends EventEmitter {
 
 const store = new VeiculoStore();
 
-setListObserver("default", handleChange)
+setListObserver("none", handleChange)
 
 function handleChange(doc) {
     records = manageRecordList(doc);

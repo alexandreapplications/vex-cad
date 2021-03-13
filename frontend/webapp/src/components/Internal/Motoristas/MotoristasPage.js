@@ -9,7 +9,7 @@ const MotoristasPage = () => {
   const [records, setRecords] = useState(null);
 
   useEffect(() => {
-    setListObserver("default", handleChange);
+    setListObserver("none", handleChange);
   }, []);
 
   function handleChange(doc) {
@@ -17,7 +17,7 @@ const MotoristasPage = () => {
   }
 
   return (
-    <React.Fragment>{records && <MotoristaList rows={records} />}</React.Fragment>
+    <React.Fragment><MotoristaList rows={records} /></React.Fragment>
   );
 };
 

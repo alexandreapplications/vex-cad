@@ -9,7 +9,7 @@ const ManifestosPage = () => {
   const [records, setRecords] = useState(null);
 
   useEffect(() => {
-    setListObserver("default", handleChange);
+    setListObserver("none", handleChange);
   }, []);
 
   function handleChange(doc) {

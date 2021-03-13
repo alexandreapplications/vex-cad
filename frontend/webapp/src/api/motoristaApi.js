@@ -39,7 +39,7 @@ export function saveRecord(domain, id, data) {
       var chance = new Chance();
       id = chance.bb_pin();
     }
-    db.collection(getCollectionName(domain))
+    return db.collection(getCollectionName(domain))
       .doc(id)
       .set(data)
       .then(() => {

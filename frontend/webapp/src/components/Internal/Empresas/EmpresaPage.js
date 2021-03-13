@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from "react";
-import {
-  getRecord,
-  saveRecord,
-  getRecordObserver,
-} from "../../../api/empresaApi";
 import EmpresaForm from "./EmpresaForm";
 import { Paper, Container, makeStyles, Grid } from "@material-ui/core";
+import { hasLength, hasCNPJValid, hasEmailValid, isStringValid, isPreenchido, isWhatsappPhone, hasNovo } from "../../../common/utils"
+import store from "../../Stores/EmpresaStore"
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -20,54 +17,42 @@ const useStyles = makeStyles((theme) => ({
 
 const EmpresaPage = (props) => {
   const [record, setRecord] = useState(null);
+  const [errors, setErrors] = useState({});
 
   const classes = useStyles();
 
   const listUri = "/empresas"
+  const novo = "novo";
 
   useEffect(() => {
-    const id = props.match.params.id; // from the path;
-    if (id) {
-      getRecord("default", id).then((_record) => setRecord(_record));
-      getRecordObserver("default", id, handleSourceChange);
+    function onStoreDataChange(doc) {
+      setRecord(doc);
+    }
+
+    if (props.match.params.id === novo) {
+      setRecord(store.getEmptyRecord());
     } else {
-      setRecord({
-        codigo: "",
-        nome: "",
-        apelido: "",
-        cnpj: "",
-        inscricao: "",
-        enderecos: [{
-          logradouro: "",
-          numero: "",
-          complemento: "",
-          bairro: "",
-          cidade: "",
-          uf: "",
-          cep: "",
-          codibge: "",
-        }],
-        telefones: [{
-          numero: "",
-          tipo: "PR"
-        }],
-        emails: [{
-          valor: "",
-          tipo: "PR"
-        }],
-        regimeTibutario: "",
-        tipoEmissao: "",
-        dataContingencia: "",
-        horaContingencia: "",
-        tipoContingencia: "",
-        sequenciaManifesto: 0,
-        ativo: true
-      });
+      store.getRecord(props.match.params.id).then(doc => setRecord(doc)).catch(error => alert(error))
+    }
+
+    return () => {
+      store.removeChangeListener(onStoreDataChange);
     }
   }, [props.match.params.id]);
 
-  function handleSourceChange(doc) {
-    setRecord(doc.data());
+  const handleBoolChange = (event) => {
+    if (event.target.name.indexOf('.') < 0)
+      setRecord({ ...record, [event.target.name]: event.target.checked });
+    else {
+      let campos = event.target.name.split('.');
+      var newRecord = { ...record }
+      var change = newRecord;
+      for (var i = 0; i < campos.length - 1; i++) {
+        change = change[campos[i]];
+      }
+      change[campos[campos.length - 1]] = event.target.checked;
+      setRecord(newRecord);
+    };
   }
 
   function handleChange({ target }) {
@@ -86,12 +71,60 @@ const EmpresaPage = (props) => {
   }
 
   function isValid() {
-    return true;
+    const _errors = {};
+    const _codigo = isPreenchido(record.codigo) /*|| isInteger(record.codigo)*/ || hasLength(record.codigo, 5) || hasNovo(record.codigo)
+    if (_codigo) _errors.codigo = _codigo;
+
+    const nome = isStringValid(record.nome, true, 10, 80);
+    if (nome) _errors.nome = nome;
+
+    const apelido = isStringValid(record.apelido, true, 3, 30);
+    if (apelido) _errors.apelido = apelido;
+
+    const cnpj = isPreenchido(record.cnpj); // || hasCNPJValid(record.cnpj);
+    if (cnpj) _errors.cnpj = cnpj;
+
+    var emailErrors = record.emails.map(element => {
+      const valor = isPreenchido(element.valor) || hasEmailValid(element.valor);
+      const tipo = isPreenchido(element.tipo);
+
+      return {
+        isValid: valor || tipo ? false : true,
+        valor,
+        tipo
+      }
+    });
+    if (emailErrors.filter(x => !x.isValid).length > 0) {
+      _errors.emails = emailErrors;
+    }
+
+    record.telefones.forEach(element => {
+      if (!isWhatsappPhone(element.numero) && element.whatsApp)
+        element.whatsApp = false;
+    })
+    var telefoneErrors = record.telefones.map(element => {
+      const numero = isPreenchido(element.numero)
+      const tipo = isPreenchido(element.tipo);
+
+      return {
+        isValid: numero || tipo ? false : true,
+        numero,
+        tipo
+      }
+    });
+    if (telefoneErrors.filter(x => !x.isValid).length > 0) {
+      _errors.telefones = telefoneErrors;
+    }
+    setErrors(_errors);
+    // Form is valid;
+    return Object.keys(_errors).length === 0;
   }
+
   function handleSubmit(event) {
     event.preventDefault();
-    if (!isValid) return;
-    saveRecord("default", props.match.params.id, record)
+    if (!isValid()) return false;
+
+    props.match.params.id === novo ? store.doAddRecord(record) : store.doUpdateRecord(record)
       .then(() => {
         props.history.push(listUri);
       })
@@ -99,7 +132,8 @@ const EmpresaPage = (props) => {
         alert(reason);
       });
   }
-  function handleCancel(event) {
+
+  function handleCancel() {
     props.history.push(listUri);
   }
 
@@ -119,7 +153,9 @@ const EmpresaPage = (props) => {
                   <h1>{props.match.params.id ? "Editar" : "Incluir"} Empresa</h1>
                   <EmpresaForm
                     record={record}
+                    error={errors}
                     onChange={handleChange}
+                    onBoolChange={handleBoolChange}
                     onSubmit={handleSubmit}
                     onCancel={handleCancel}
                   ></EmpresaForm>

@@ -1,3 +1,4 @@
+export const novo = "novo";
 export const tipoVeiculos = [
     {
         value: "01",
@@ -29,6 +30,12 @@ export const tipoProd = [
         value: "03",
         label: "Refrigerado"
     }
+]
+export const tipoUsuario = [
+    { "value": "NCF", label: "Não confirmado" },
+    { "value": "RESPONSAVEL", label: "Administrador Responsavel" },
+    { "value": "AVANCADO", label: "Usuário Avançado" },
+    { "value": "OPERACAO", label: "Usuário Operação" },
 ]
 export const tipoEmail = [
     { "label": "Principal", "value": "PR" },

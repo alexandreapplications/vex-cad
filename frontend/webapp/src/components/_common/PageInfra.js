@@ -6,7 +6,7 @@ import Hidden from "@material-ui/core/Hidden";
 import { Link as RouterLink, Redirect } from "react-router-dom";
 import UserComponent from "./UserComponent";
 import authStore from "../Stores/AuthStore";
-import usuarioStore from "../Stores/UsuarioStore";
+// import usuarioStore from "../Stores/UsuarioStore";
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
@@ -84,7 +84,7 @@ const PageInfra = ({ children, ...initOptions }) => {
   const theme = useTheme();
   const [open, setOpen] = useState(false);
   const [autenticacao, setAutenticacao] = useState(authStore.getUser());
-  const [usuario, setUsuario] = useState(null);
+  // const [usuario, setUsuario] = useState(null);
   const [domains, setDomains] = useState(domainStore.getDomains());
   const [selectedDomain, setSelectedDomain] = useState(null);
 
@@ -97,20 +97,20 @@ const PageInfra = ({ children, ...initOptions }) => {
       setDomains(domainStore.getDomains());
     }
 
-    function onUsuarioChange() {
-      setUsuario(usuarioStore.getRecord());
-    }
+    // function onUsuarioChange() {
+    //   setUsuario(usuarioStore.getRecord());
+    // }
 
     authStore.addChangeListener(onAuthChange);
 
     domainStore.addChangeListener(onDomainChanges);
 
-    usuarioStore.addChangeListener(onUsuarioChange);
+    // usuarioStore.addChangeListener(onUsuarioChange);
 
     return () => {
       domainStore.removeChangeListener(onDomainChanges);
       authStore.removeChangeListener(onAuthChange);
-      usuarioStore.removeChangeListener(onUsuarioChange);
+      // usuarioStore.removeChangeListener(onUsuarioChange);
     };
   });
 
@@ -274,7 +274,6 @@ const PageInfra = ({ children, ...initOptions }) => {
       >
         <div className={classes.drawerHeader} />
         {children}
-        <p>{JSON.stringify(usuario)}</p>
       </main>
     </div>
   );

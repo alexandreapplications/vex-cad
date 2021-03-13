@@ -57,8 +57,8 @@ const ManifestoPage = (props) => {
     }
     const id = props.match.params.id; // from the path;
     if (id) {
-      getRecord("default", id).then((_record) => setRecord(_record));
-      getRecordObserver("default", id, handleSourceChange);
+      getRecord("none", id).then((_record) => setRecord(_record));
+      getRecordObserver("none", id, handleSourceChange);
     } else {
       setRecord({
         codigo: "",
@@ -136,7 +136,7 @@ const ManifestoPage = (props) => {
   function handleSubmit(event) {
     event.preventDefault();
     if (!isValid) return;
-    saveRecord("default", props.match.params.id, record)
+    saveRecord("none", props.match.params.id, record)
       .then(() => {
         props.history.push(listUri);
       })

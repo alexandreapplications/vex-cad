@@ -9,7 +9,7 @@ const MotoristasPage = () => {
   const [records, setRecords] = useState(null);
 
   useEffect(() => {
-    setListObserver("default", handleChange);
+    setListObserver(handleChange);
   }, []);
 
   function handleChange(doc) {

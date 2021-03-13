@@ -2,12 +2,13 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import { TableFooter, Button, Paper, TableRow, TableHead, TableContainer, TableCell, TableBody, Table } from "@material-ui/core";
 import { Link as RouterLink } from "react-router-dom";
+import { novo } from "../../../common/constraints"
 
 const recordUri = "/empresa"
 const MotoristaList = (props) => {
     return (<React.Fragment>
         <TableContainer component={Paper}>
-            <Table aria-label="Lista dos veiculos" stickyHeader>
+            <Table aria-label="Lista dos empresas" stickyHeader>
                 <TableHead>
                     <TableRow>
                         <TableCell>Nome</TableCell>
@@ -24,25 +25,25 @@ const MotoristaList = (props) => {
                         </TableRow>
                     )}
                     {props.rows.map((row) => (
-                        <TableRow key={row.id}>
+                        <TableRow key={row.codigo}>
                             <TableCell component="th" scope="row">
-                                <NavLink to={`${recordUri}/${row.id}`}>{row.data.nome}</NavLink>
+                                <NavLink to={`${recordUri}/${row.codigo}`}>{row.nome}</NavLink>
                             </TableCell>
-                            <TableCell align="center">{row.data.apelido}</TableCell>
-                            <TableCell align="center">{row.data.telefones.map((item, idx) => (
+                            <TableCell align="center">{row.apelido}</TableCell>
+                            <TableCell align="center">{row.telefones.map((item, idx) => (
                                 <React.Fragment>{idx > 0 ? ", " : ""}{item.numero}</React.Fragment>
                             ))}</TableCell>
-                            <TableCell align="center">{row.data.emails.map((item, idx) => (
+                            <TableCell align="center">{row.emails.map((item, idx) => (
                                 <React.Fragment>{idx > 0 ? ", " : ""}{item.valor}</React.Fragment>
                             ))}</TableCell>
-                            <TableCell align="center">{row.data.ativo ? "Sim" : "Não"}</TableCell>
+                            <TableCell align="center">{row.ativo ? "Sim" : "Não"}</TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
                 <TableFooter>
                     <TableRow key={0}>
                         <TableCell colSpan={5}>
-                            <Button color="inherit" component={RouterLink} to={recordUri}>Incluir</Button>
+                            <Button color="inherit" component={RouterLink} to={`${recordUri}/${novo}`}>Incluir</Button>
                         </TableCell>
                     </TableRow>
                 </TableFooter>

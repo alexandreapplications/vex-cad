@@ -1,8 +1,8 @@
 
 export function manageRecordList(snapshot) {
-    var newRecords = [];
+    let response = [];
     snapshot.forEach((item) => {
-        newRecords.push({ id: item.id, data: item.data() });
+        response.push({ ...item.data(), id: item.id });
     });
-    return newRecords;
+    return response;
 }

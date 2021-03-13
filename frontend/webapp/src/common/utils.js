@@ -1,7 +1,7 @@
 const regexEmail = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 const regexInteger = /^[0-9]+$/;
 const regexBrazilCellPhone = /^\+55[- ]{0,1}\d{2}[- ]{0,1}\d{5}[- ]{0,1}\d{4}$/;
-const regexPlaca = /^[\dA-Z]{7}/;
+const regexPlaca = /^^([A-Z]{3}-\d{4})|([\dA-Z]{7})$/;
 export function isPreenchido(obj) {
     if (obj && obj.length > 0)
         return null;
@@ -38,6 +38,13 @@ export function hasCPFValid(obj) {
     return 'CPF Inválido'
 }
 
+export function hasCNPJValid(obj) {
+    if (!obj || cnpjValido(obj))
+        return null;
+
+    return 'CNPJ Inválido'
+}
+
 export function hasEmailValid(obj) {
     if (!obj || emailValido(obj))
         return null;
@@ -50,6 +57,13 @@ export function hasPlacaValida(text) {
         return null;
 
     return 'Placa inválida'
+}
+
+export function hasNovo(text) {
+    if (!text || text !== "novo")
+        return null;
+
+    return 'O Código não pode ser igual a novo'
 }
 
 export function isStringValid(obj, obrigatorio, min, max) {

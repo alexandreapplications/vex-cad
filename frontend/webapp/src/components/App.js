@@ -7,7 +7,7 @@ import SignInPage from "./Security/SignInPage";
 import SignUpPage from "./Security/SignUpPage";
 import PageNotFound from "./PageNotFound";
 import authStore from "./Stores/AuthStore";
-import usuarioStore from "./Stores/UsuarioStore";
+// import usuarioStore from "./Stores/UsuarioStore";
 import VeiculoPage from "./Internal/Veiculos/VeiculoPage";
 import VeiculosPage from "./Internal/Veiculos/VeiculosPage";
 import MotoristaPage from "./Internal/Motoristas/MotoristaPage";
@@ -24,7 +24,7 @@ import ManifestoPage from "./Internal/Manifestos/ManifestoPage";
 const App = (...props) => {
   const [autenticacao, setAutenticacao] = useState(authStore.getUser());
   const [inicializado, setInicializado] = useState(false);
-  const [usuario, setUsuario] = useState(usuarioStore.getRecord());
+  // const [usuario, setUsuario] = useState(usuarioStore.getRecord());
   const [messages, setMessages] = useState(messageStore.getMessages());
 
   useEffect(() => {
@@ -36,18 +36,18 @@ const App = (...props) => {
     function onMessageChange() {
       setMessages(messageStore.getMessages());
     }
-    function onUsuarioChange() {
-      setUsuario(usuarioStore.getRecord());
-    }
+    // function onUsuarioChange() {
+    //   setUsuario(usuarioStore.getRecord());
+    // }
 
     authStore.addChangeListener(onAuthChange);
     messageStore.addChangeListener(onMessageChange);
-    usuarioStore.addChangeListener(onUsuarioChange);
+    //usuarioStore.addChangeListener(onUsuarioChange);
 
     return () => {
       authStore.removeChangeListener(onAuthChange);
       messageStore.removeChangeListener(onMessageChange);
-      usuarioStore.removeChangeListener(onUsuarioChange);
+      //usuarioStore.removeChangeListener(onUsuarioChange);
     };
   });
 
@@ -74,7 +74,6 @@ const App = (...props) => {
             <PrivateRoute path="/domain" component={DomainPage} />
             <PrivateRoute path="/motoristas" component={MotoristasPage} />
             <PrivateRoute path="/motorista/:id" component={MotoristaPage} />
-            <PrivateRoute path="/motorista" component={MotoristaPage} />
             <PrivateRoute path="/veiculos" component={VeiculosPage} />
             <PrivateRoute path="/veiculo/:id" component={VeiculoPage} />
             <PrivateRoute path="/veiculo" component={VeiculoPage} />
@@ -90,7 +89,6 @@ const App = (...props) => {
             <Route path="/signup" component={SignUpPage} />
             <Route component={PageNotFound} />
           </Switch>
-          <p>{JSON.stringify(usuario)}</p>
         </PageInfra>
 
       ) : (

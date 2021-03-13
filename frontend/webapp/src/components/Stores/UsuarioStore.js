@@ -12,6 +12,7 @@ var usuarioObserver = null;
 class UsuarioStore extends EventEmitter {
     setUsuario(doc) {
         record = doc;
+        Dispatcher.dispatch({ actionType: actionTypes.CHANGE_USER, usuario: doc })
     }
 
     getRecord() {
